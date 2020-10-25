@@ -1,0 +1,46 @@
+echo "# R-estadistica-y-epidemiologia-" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/Andresp8503/R-estadistica-y-epidemiologia-.git
+git push -u origin main
+    file.choose()
+datosmdetapa1<-"D:\\Documentos\\analisis epidemiologico\\Epiphy-SADIE\\etapa 1.xlsx"
+datosdirecto_etapa1<- read_excel(datosmdetapa1)
+datosdirecto_etapa1
+library(epiphy)
+#indice Fischer
+total_poblacion1_fischer<-agg_index(datosdirecto_etapa1$total_colectado,method=c("fisher"), flavor = c("count"))
+total_poblacion1_fischer
+z.test(total_poblacion1_fischer, alternative = c("greater"))
+#para adultos
+adultos_fischer1<-agg_index(datosdirecto_etapa1$total_adultos,method=c("fisher"), flavor = c("count"))
+adultos_fischer1
+z.test(adultos_fischer1, alternative = c("greater"))
+#para larvas(ninfas)
+larvas_fischer1<-agg_index(datosdirecto_etapa1$Larvas,method=c("fisher"), flavor = c("count"))
+larvas_fischer1
+z.test(larvas_fischer1, alternative = c("greater"))
+
+#SADIE
+
+#creando el vector del objeto x= y= coordenadas, i= datos tipo conteo infestación incidencia
+
+count_thrips<-count_data(datosdirecto_etapa1, mapping(x= x, y = y, i= total_colectado))
+
+ # comprobación del tipo de variable
+
+is.count(count_thrips)
+
+#calculo indices                  
+
+result_thrips <-sadie(count_thrips, index = "all",)
+ # por defecto se realizan 100 permutaciones con la función nperm se pude modifcar
+#para ver los resultados en la consola
+result_thrips
+summary(result_thrips) 
+#grafica de indice absoluto  y de umbral 
+plot(result_thrips) # grafico índice de Perry
+plot(result_thrips, index=  "Li-Madden-Xu") # grafico índice de Li-Madden-Xu significacia 
+plot(result_thrips, isoclines= TRUE) #grafico de contornos
